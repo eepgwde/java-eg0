@@ -26,8 +26,9 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
 /**
- *
  * @author weaves
+ *
+ * A collector is more useful than a reduce. It can implement some history.
  */
 
 public class HistogramCollector
@@ -44,17 +45,27 @@ public class HistogramCollector
         return HashMap::new;
     }
 
+    /**
+     * This does the increment of the count.
+     * Either sets it to 1 or updates it with the increment.
+     */
     @Override
     public BiConsumer<Map<Integer, Integer>, Double> accumulator() {
         return (map, val) -> map.merge((int)(val / bucketSize), 1,
                                        (a, b) -> a + 1);
     }
 
+    /**
+     * Used to convert the final type of the result.
+     */
     @Override
     public Function<Map<Integer, Integer>, Map<Integer, Integer>> finisher() {
         return Function.identity();
     }
 
+    /**
+     * When used in parallel this merges the results.
+     */
     @Override
     public BinaryOperator<Map<Integer, Integer>> combiner() {
         return (map1, map2) -> {
@@ -63,6 +74,9 @@ public class HistogramCollector
         };
     }
 
+    /**
+     * Specification of how processing maybe carried out.
+     */
     @Override
     public Set<java.util.stream.Collector.Characteristics> characteristics() {
         return Collections
@@ -70,6 +84,9 @@ public class HistogramCollector
                                         Characteristics.UNORDERED));
     }
 
+    /**
+     * utility method to get an instance.
+     */
     public static HistogramCollector toHistogram(int bucketSize) {
         return new HistogramCollector(bucketSize);
     }

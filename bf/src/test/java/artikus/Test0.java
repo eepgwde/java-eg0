@@ -136,6 +136,11 @@ public class Test0 {
             System.out.println("list: " + y2);
         }
 
+        {
+            Arrays.sort(values);
+            System.out.println(values)
+        }
+
     }
 
     @Test
