@@ -1,0 +1,91 @@
+* betfair Technical Task
+
+Walter.D.Eaves@gmail.com
+
+* Overview
+
+The results are in the file make.log
+
+** Class structure
+
+*** Bet
+
+I made Bet a base class for Lay and Back. I don't use MatchedBet: all
+Bets have a match, that is either "null" or a reference to another
+Bet.
+
+Each Bet has a unique integer identifier called priority. This and the
+compare() method allow for usable sets.
+
+*** Amount and Odds
+
+I added these to allow for some extra behaviour.
+
+** Data partitioning
+
+Java 6 doesn't have Predicate operators. The DataSet class does allow
+for filtering. I used the SortedSet<> with Comparator and sort() to
+partition up the data. It doesn't work as well as upper-bound in C++
+STL, so I have to manual iterate through looking for changes in market
+and so on.
+
+There are two Partitioners for sets of Bets, the base class
+Partitioner for market and the ByBet class for Lay and Back.
+
+** Matching
+
+The MatchingEngine class initiates matching via match(), this splits
+up the bets by market and starts a thread to match the bets. The
+matching is then done by the inner class Matcher.
+
+The threads post the results back to the MatchingEngine.
+
+** Testing
+
+The test script is Test0.java. The final test is Test0_7 this steps
+through all the scenarios. The output is given in make.log
+
+Here is the first scenario and the output. 
+
+ Running com.example.betfair.Test0
+ 0 [main] INFO com.example.betfair.Test0  - input: scenario: 1
+ 2 [main] INFO com.example.betfair.Test0  - com.betfair.Back:A:117:10.000000:2.000000: match: none
+ 4 [main] INFO com.example.betfair.Test0  - com.betfair.Lay:A:118:10.000000:2.000000: match: none
+ 6 [main] INFO com.example.betfair.Test0  - final
+ 6 [main] INFO com.example.betfair.Test0  - com.betfair.Lay:A:118:10.000000:2.000000: match: com.betfair.Back:A:117:10.000000:2.000000
+
+"input: scenario: 1" matches the scenario given in the readme.txt
+
+And then, the bets on the input are given like so (from the Bet.toString()).
+
+ com.betfair.Back:A:117:10.000000:2.000000: match: none
+
+meaning it's a Back bet on market A with id 117 for 10 GBP at evens
+(2.0). No matching bet.
+
+The output, just the one for this scenario, follows the keyword
+"final" and is similar toString() output, here with the addition of a matching bet.
+
+ com.betfair.Lay:A:118:10.000000:2.000000: match: com.betfair.Back:A:117:10.000000:2.000000
+
+All the test scenarios seem to give the right results. There is no
+automated checking.
+
+* Notes
+
+It took me about 5 hours in all. It's always been an issue to process
+sets of data quickly with Java. I've used the SortedSet<> approach
+before.
+
+* 
+
+[  Local Variables: ]
+[  mode:text ]
+[  mode:outline-minor ]
+[  mode:auto-fill ]
+[  fill-column: 75 ]
+[  coding: iso-8859-1-unix ]
+[  comment-column:50 ]
+[  comment-start: "[  "  ]
+[  comment-end:"]" ]
+[  End: ]
