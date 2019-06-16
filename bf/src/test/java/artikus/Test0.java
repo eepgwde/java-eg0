@@ -19,6 +19,7 @@ import java.util.SortedSet;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
 
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -138,9 +139,42 @@ public class Test0 {
 
         {
             Arrays.sort(values);
-            System.out.println(values)
+            System.out.println("sorted: " + i0.as(i0.as(values)));
+            int mark = 0;
+            for (int i=0; i<values.length; i++) {
+                if (values[i] <= 0)
+                    continue;
+
+                if (values[i] > mark + 1)
+                    break;
+
+                mark = values[i];
+            }
+            System.out.println("mark: " + (mark + 1) );
+
+            {
+            int v = 533;
+            String[] vs = (new Integer(v)).toString().split("");
+            Arrays.sort(vs, Collections.reverseOrder());
+            String str = String.join("", vs);
+            System.out.println(str);
+            int r0 = Integer.parseInt(str);
+            System.out.println(r0);
+            }
+
         }
 
+    }
+
+    @Test
+    public void Test0_4() throws Exception {
+        assertNotNull(new Integer(4));
+        Solution s = new Solution();
+        int [] v = {0, 3, 3, 7, 5, 3, 11, 1};
+        int r0 = s.solution(v);
+        System.out.println(r0);
+
+        Set<Integer> v0 = Arrays.stream(v).boxed().collect(Collectors.toSet());
     }
 
     @Test
